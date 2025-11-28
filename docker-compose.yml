@@ -1,0 +1,29 @@
+
+services:
+  postgres:
+    image: postgres:17.7
+    container_name: zendo-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: zendo
+    ports:
+      - "5434:5432"
+    volumes:
+      - zendo-data:/var/lib/postgresql/data
+    networks:
+      - zendo
+
+  redis:
+    image: redis:8.4
+    container_name: zendo-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - zendo
+
+networks:
+  zendo:
+
+volumes:
+  zendo-data:
