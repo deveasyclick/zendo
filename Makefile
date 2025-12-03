@@ -14,6 +14,11 @@ back:
 	cd backend && air &
 	@echo "Go backend running with live reload."
 
+lint: 
+	cd backend && golangci-lint run 
+	@echo "Go linting running."
+
+
 # Start frontend apps
 front:
 	cd frontend && pnpm dev &
