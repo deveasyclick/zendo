@@ -63,3 +63,4 @@ pnpm-debug.log*
 *.tmp
 *.orig
 *.rej
+backend/main
