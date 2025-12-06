@@ -37,6 +37,16 @@ func NewHandler(svc Service) *handler {
 	return &handler{svc: svc}
 }
 
+// @Summary Create a new conversation
+// @Description Creates a new conversation for a visitor
+// @Tags Conversations
+// @Accept json
+// @Produce json
+// @Param createConversationReq body createConversationReq true "Visitor ID"
+// @Success 201 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /conversations [post]
 func (h *handler) CreateConversation(w http.ResponseWriter, r *http.Request) {
 	var body createConversationReq
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -53,7 +63,15 @@ func (h *handler) CreateConversation(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusCreated, response.SuccessResponse{Data: conversation})
 }
 
-// GET /conversations/{id}
+// @Summary Get a conversation
+// @Description Retrieves a conversation by ID
+// @Tags Conversations
+// @Produce json
+// @Param id path int true "Conversation ID"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /conversations/{id} [get]
 func (h *handler) GetConversation(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
@@ -70,8 +88,17 @@ func (h *handler) GetConversation(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: conversation})
 }
 
-// PATCH /conversations/{id}/assign
-
+// @Summary Assign an agent to a conversation
+// @Description Assigns an agent to an existing conversation
+// @Tags Conversations
+// @Accept json
+// @Produce json
+// @Param id path int true "Conversation ID"
+// @Param assignAgentReq body assignAgentReq true "Agent ID"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /conversations/{id}/assign [patch]
 func (h *handler) AssignAgent(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
@@ -94,7 +121,17 @@ func (h *handler) AssignAgent(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: conversation})
 }
 
-// PATCH /conversations/{id}/status
+// @Summary Update conversation status
+// @Description Updates the status of a conversation (e.g., open, closed)
+// @Tags Conversations
+// @Accept json
+// @Produce json
+// @Param id path int true "Conversation ID"
+// @Param setStatusReq body setStatusReq true "New status"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /conversations/{id}/status [patch]
 func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
@@ -117,7 +154,13 @@ func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: "status updated"})
 }
 
-// GET /conversations
+// @Summary List open conversations
+// @Description Returns a list of currently open conversations
+// @Tags Conversations
+// @Produce json
+// @Success 200 {object} response.SuccessResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /conversations [get]
 func (h *handler) ListOpenConversations(w http.ResponseWriter, r *http.Request) {
 	conversations, err := h.svc.ListOpenConversations(r.Context())
 	if err != nil {

@@ -1,3 +1,22 @@
+// @title Zendo API
+// @version 1.0
+// @description Zendo API.
+// @termsOfService http://zendo.com/terms/
+
+// @contact.name API Support
+// @contact.url http://zendo.com/support
+// @contact.email support@zendo.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:3001
+// @BasePath /
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
 package main
 
 import (
