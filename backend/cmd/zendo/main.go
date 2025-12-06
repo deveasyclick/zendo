@@ -13,6 +13,7 @@ import (
 
 	"github.com/deveasyclick/zendo/backend/internal/app"
 	"github.com/deveasyclick/zendo/backend/internal/routes"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 
 	app, err := app.New(ctx)
 	if err != nil {
-		log.Fatalf("unable to create app: %v", err)
+		log.Fatal("unable to create app", zap.Error(err))
 	}
 
 	handlers := routes.LoadRoutes(app)
@@ -31,9 +32,9 @@ func main() {
 	}
 
 	go func() {
-		log.Println("Server running on port", app.Config.PORT)
+		app.Logger.Info("Server running on port", zap.Int("port", app.Config.PORT))
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("Server failed: %v", err)
+			app.Logger.Fatal("Server failed", zap.Error(err))
 		}
 	}()
 
@@ -42,6 +43,9 @@ func main() {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(shutdownCtx); err != nil {
-		log.Fatalf("Server forced to shutdown: %v", err)
+		app.Logger.Fatal("Server forced to shutdown", zap.Error(err))
 	}
+
+	app.Close()
+	app.Logger.Info("Server exited gracefully")
 }
