@@ -23,3 +23,7 @@ lint:
 front:
 	cd frontend && pnpm dev &
 	@echo "Frontend apps running."
+
+.PHONY: swagger
+swagger:
+	cd backend && swag init --output docs --generalInfo cmd/zendo/main.go
