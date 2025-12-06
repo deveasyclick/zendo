@@ -10,8 +10,8 @@ db:
 	@echo "Postgres and Redis are up."
 
 # Start backend locally with live reload
-back:
-	cd backend && air &
+api:
+	cd backend && air
 	@echo "Go backend running with live reload."
 
 lint: 
