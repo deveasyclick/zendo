@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"strings"
 	"sync"
@@ -10,42 +11,56 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// context key
 type rateLimitKey struct{}
 
-// RateLimiterMiddleware returns a middleware that enforces rate limiting per IP
-func RateLimiterMiddleware(rps float64, burst int, next http.Handler) http.Handler {
-	limiters := &sync.Map{} // IP -> *rate.Limiter
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ip := realIP(r)
-
-		limiter, _ := limiters.LoadOrStore(ip, rate.NewLimiter(rate.Limit(rps), burst))
-		rl := limiter.(*rate.Limiter)
-
-		// Fixed: AllowN takes (time.Time, int) - no context
-		if !rl.AllowN(time.Now(), 1) {
-			http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
-			return
-		}
-
-		// Attach limiter to context for per-request access if needed
-		ctx := context.WithValue(r.Context(), rateLimitKey{}, rl)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+// global limiter map per instance of middleware (correct)
+type ipLimiterStore struct {
+	limiters sync.Map // map[string]*rate.Limiter
 }
 
-func realIP(r *http.Request) string {
-	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-		// Return first IP in chain
-		if idx := strings.IndexByte(xff, ','); idx > 0 {
-			return strings.TrimSpace(xff[:idx])
-		}
-		return strings.TrimSpace(xff)
+// RateLimiterMiddleware enforces per-IP rate limiting
+func RateLimiterMiddleware(rps float64, burst int) func(http.Handler) http.Handler {
+	store := &ipLimiterStore{}
+
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ip := realIP(r)
+
+			limiterIface, _ := store.limiters.LoadOrStore(ip, rate.NewLimiter(rate.Limit(rps), burst))
+			limiter := limiterIface.(*rate.Limiter)
+
+			// AllowN(time, amount)
+			if !limiter.AllowN(time.Now(), 1) {
+				http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+				return
+			}
+
+			// attach limiter to context
+			ctx := context.WithValue(r.Context(), rateLimitKey{}, limiter)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
 	}
+}
+
+// Extract real client IP from headers or RemoteAddr
+func realIP(r *http.Request) string {
+	// X-Forwarded-For (comma-separated list)
+	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+		parts := strings.Split(xff, ",")
+		return strings.TrimSpace(parts[0])
+	}
+
+	// Fallback: RemoteAddr contains "ip:port"
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err == nil {
+		return host
+	}
+
 	return r.RemoteAddr
 }
 
-// Helper to get limiter from context (optional)
+// Access limiter if needed
 func LimiterFromContext(ctx context.Context) *rate.Limiter {
 	if l, ok := ctx.Value(rateLimitKey{}).(*rate.Limiter); ok {
 		return l
