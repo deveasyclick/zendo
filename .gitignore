@@ -64,3 +64,4 @@ pnpm-debug.log*
 *.orig
 *.rej
 backend/main
+backend/tmp/zendo

@@ -1,14 +1,14 @@
 package config
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	DB_URL string `env:"DATABASE_URL,required"`
+	DB_URL string `env:"DB_URL,required"`
 	PORT   int    `env:"PORT" default:"5000"`
 }
 
@@ -21,7 +21,7 @@ func LoadConfig() (*Config, error) {
 
 	err := env.Parse(&cfg) // 👈 Parse environment variables into `Config`
 	if err != nil {
-		log.Fatalf("unable to parse ennvironment variables: %e", err)
+		return nil, fmt.Errorf("unable to parse ennvironment variables: %e", err)
 	}
 	return &cfg, nil
 }
