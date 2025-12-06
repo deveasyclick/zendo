@@ -10,6 +10,8 @@ import (
 type Config struct {
 	DB_URL string `env:"DB_URL,required"`
 	PORT   int    `env:"PORT" envDefault:"5000"`
+	Env    string `env:"ENV" envDefault:"development"`
+	AppURL string `env:"APP_URL" envDefault:"http://localhost:3001"`
 }
 
 func LoadConfig() (*Config, error) {
