@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	DB_URL string `env:"DATABASE_URL,required"`
+	DB_URL string `env:"DB_URL,required"`
 	PORT   int    `env:"PORT" default:"5000"`
 }
 
