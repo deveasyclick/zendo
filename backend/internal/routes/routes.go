@@ -21,10 +21,10 @@ func LoadRoutes(app *app.App) http.Handler {
 }
 
 func applyMiddlewares(handler http.Handler, logger *zap.Logger) http.Handler {
-	handler = middleware.RequestLogger(logger)(handler)
 	handler = middleware.Recovery(logger)(handler)
+	handler = middleware.RateLimiterMiddleware(10.0, 20)(handler)
 	handler = middleware.CORSMiddleware([]string{"https://yourfrontend.com"})(handler)
-	handler = middleware.RateLimiterMiddleware(10.0, 20, handler)
+	handler = middleware.RequestLogger(logger)(handler)
 
 	return handler
 }
