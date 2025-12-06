@@ -2,8 +2,6 @@
 
 ### Backend
 
-- [ ] Logger
-- [ ] Middleware (request id logging, panic recovery, cors)
 - [ ] Request validation
 - [ ] Documentation with swagger
 - [ ] Websocket
