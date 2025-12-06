@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	DB_URL string `env:"DB_URL,required"`
-	PORT   int    `env:"PORT" default:"5000"`
+	PORT   int    `env:"PORT" envDefault:"5000"`
 }
 
 func LoadConfig() (*Config, error) {
