@@ -154,6 +154,29 @@ REDIS_URL=redis://localhost:6379
 
 ---
 
+### **Swagger Documentation**
+
+We use [Swag](https://github.com/swaggo/swag) to generate API documentation and routes for the backend.
+
+**Install Swag CLI:**
+
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+**Generate Swagger docs:**
+
+```bash
+cd backend
+swag init
+```
+
+This will generate:
+
+* `docs/docs.go` – Go code for Swagger
+* `docs/swagger.json` – Swagger JSON file
+* `docs/swagger.yaml` – Swagger YAML file
+
 
 ---
 
