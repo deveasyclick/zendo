@@ -1,0 +1,192 @@
+basePath: /
+definitions:
+  conversation.assignAgentReq:
+    properties:
+      agent_id:
+        type: integer
+    type: object
+  conversation.createConversationReq:
+    properties:
+      visitor_id:
+        type: string
+    type: object
+  conversation.setStatusReq:
+    properties:
+      status:
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      code:
+        type: string
+      details: {}
+      error:
+        type: string
+    type: object
+  response.SuccessResponse:
+    properties:
+      data: {}
+    type: object
+host: localhost:3001
+info:
+  contact:
+    email: support@zendo.com
+    name: API Support
+    url: http://zendo.com/support
+  description: Zendo API.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://zendo.com/terms/
+  title: Zendo API
+  version: "1.0"
+paths:
+  /conversations:
+    get:
+      description: Returns a list of currently open conversations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: List open conversations
+      tags:
+      - Conversations
+    post:
+      consumes:
+      - application/json
+      description: Creates a new conversation for a visitor
+      parameters:
+      - description: Visitor ID
+        in: body
+        name: createConversationReq
+        required: true
+        schema:
+          $ref: '#/definitions/conversation.createConversationReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Create a new conversation
+      tags:
+      - Conversations
+  /conversations/{id}:
+    get:
+      description: Retrieves a conversation by ID
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get a conversation
+      tags:
+      - Conversations
+  /conversations/{id}/assign:
+    patch:
+      consumes:
+      - application/json
+      description: Assigns an agent to an existing conversation
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Agent ID
+        in: body
+        name: assignAgentReq
+        required: true
+        schema:
+          $ref: '#/definitions/conversation.assignAgentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Assign an agent to a conversation
+      tags:
+      - Conversations
+  /conversations/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Updates the status of a conversation (e.g., open, closed)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New status
+        in: body
+        name: setStatusReq
+        required: true
+        schema:
+          $ref: '#/definitions/conversation.setStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Update conversation status
+      tags:
+      - Conversations
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
