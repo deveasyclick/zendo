@@ -1,6 +1,6 @@
 # Zendo
 
-**A modern, realtime live chat support platform built with Next.js (frontend) and Go (backend).**  
+**A modern, realtime live chat support platform built with Next.js (frontend) and Go (backend).**
 
 This platform allows businesses to embed a lightweight chat widget on their websites and respond to visitors instantly via a dashboard. It is designed for speed, scalability, and ease of development.
 
@@ -8,51 +8,53 @@ This platform allows businesses to embed a lightweight chat widget on their webs
 
 ## Features
 
-- Realtime messaging between website visitors and agents
-- Lightweight, embeddable widget
-- Agent dashboard with conversation history
-- Presence indicators and typing status
-- Multi-agent support
-- Conversation persistence with PostgreSQL
-- Scalable architecture (Redis Pub/Sub ready)
-- Hot-reload development setup
+* Realtime messaging between website visitors and agents
+* Lightweight, embeddable widget
+* Agent dashboard with conversation history
+* Presence indicators and typing status
+* Multi-agent support
+* Conversation persistence with PostgreSQL
+* Database migrations with Goose
+* Automatic migrations in development
+* Scalable architecture (Redis Pub/Sub ready)
+* Hot-reload development setup
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js, React, TypeScript, Tailwind CSS |
-| Backend | Go, Gorilla WebSocket, PostgreSQL |
-| Dev tooling | Makefile, pnpm workspace, Air (Go hot reload) |
+| Layer       | Technology                                                 |
+| ----------- | ---------------------------------------------------------- |
+| Frontend    | Next.js, React, TypeScript, Tailwind CSS                   |
+| Backend     | Go, Gorilla WebSocket, PostgreSQL, Goose (migrations)      |
+| Dev tooling | Makefile, PNPM workspace, Air (Go hot reload), SQLC, Goose |
 
 ---
 
 ## Folder Structure
 
 ```bash
-
 /zendo
-/frontend
-/apps
-/dashboard   # Agent dashboard
-/widget      # JS snippet for embedding
-/packages
-/ui          # Shared UI components
-/types       # Shared TypeScript types
-/utils       # Utility functions
-package.json
-pnpm-workspace.yaml
+  /frontend
+    /apps
+      /dashboard   # Agent dashboard
+      /widget      # JS snippet for embedding
+    /packages
+      /ui          # Shared UI components
+      /types       # Shared TypeScript types
+      /utils       # Utility functions
+    package.json
+    pnpm-workspace.yaml
 
-/backend
-/cmd/api
-/internal
-/pkg
-go.mod
+  /backend
+    /cmd/api
+    /internal
+    /migrations  # Goose migrations
+    /pkg
+    .tool-versions
+    go.mod
 
 Makefile
-
 ```
 
 ---
@@ -61,11 +63,10 @@ Makefile
 
 ### Prerequisites
 
-- Node.js >= 22
-- PNPM >= 10
-- Go >= 1.23.1
-- PostgreSQL
-
+* Node.js >= 22
+* PNPM >= 10
+* Go >= 1.25
+* PostgreSQL
 
 ---
 
@@ -92,6 +93,12 @@ cd ../backend
 go mod download
 ```
 
+Install developer tools (SQLC, Goose, Air):
+
+```bash
+make tools
+```
+
 ---
 
 ### Development
@@ -104,7 +111,9 @@ make dev
 
 This will:
 
+* Start PostgreSQL and Redis via Docker
 * Run the Go backend with hot reload
+* Apply pending migrations automatically (in non-production)
 * Run the Next.js dashboard and widget in dev mode
 
 Open your browser at:
@@ -127,10 +136,70 @@ pnpm dev
 
 ```bash
 cd backend
-air
+make api
 ```
 
-> `air` is recommended for Go hot-reload. Install: [https://github.com/cosmtrek/air](https://github.com/cosmtrek/air)
+> `air` is used for Go hot-reload.
+
+---
+
+## Database Migrations
+
+We use [Goose](https://github.com/pressly/goose) for managing SQL migrations.
+
+**Apply migrations:**
+
+```bash
+make migrate-up
+```
+
+**Rollback last migration:**
+
+```bash
+make migrate-down
+```
+
+**Check migration status:**
+
+```bash
+make migrate-status
+```
+
+**Create a new migration:**
+
+```bash
+make migrate-new
+```
+
+Migrations are located in `/backend/migrations`.
+
+---
+
+## Linting
+
+Run Golang lint checks:
+
+```bash
+make lint
+```
+
+---
+
+### Swagger Documentation
+
+We use [Swag](https://github.com/swaggo/swag) to generate API documentation.
+
+**Generate Swagger docs:**
+
+```bash
+make swagger
+```
+
+This will generate:
+
+* `docs/docs.go` – Go code for Swagger
+* `docs/swagger.json` – Swagger JSON file
+* `docs/swagger.yaml` – Swagger YAML file
 
 ---
 
@@ -148,35 +217,10 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 
 ```env
 PORT=8080
-DATABASE_URL=postgres://user:password@localhost:5432/chatsupport
+DB_URL=postgres://postgres:password@localhost:5432/zendo?sslmode=disable
 REDIS_URL=redis://localhost:6379
+ENV=development
 ```
-
----
-
-### **Swagger Documentation**
-
-We use [Swag](https://github.com/swaggo/swag) to generate API documentation and routes for the backend.
-
-**Install Swag CLI:**
-
-```bash
-go install github.com/swaggo/swag/cmd/swag@latest
-```
-
-**Generate Swagger docs:**
-
-```bash
-cd backend
-swag init
-```
-
-This will generate:
-
-* `docs/docs.go` – Go code for Swagger
-* `docs/swagger.json` – Swagger JSON file
-* `docs/swagger.yaml` – Swagger YAML file
-
 
 ---
 
