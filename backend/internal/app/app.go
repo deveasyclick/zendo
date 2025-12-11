@@ -25,10 +25,14 @@ func New(ctx context.Context) (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Unable to connect to database: %v", err)
 	}
-
 	logger, err := zap.NewProduction()
 	if err != nil {
 		return nil, fmt.Errorf("Unable to create logger: %v", err)
+	}
+
+	err = db.AutoMigrate(cfg, logger)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to apply migrations: %v", err)
 	}
 
 	app := &App{
