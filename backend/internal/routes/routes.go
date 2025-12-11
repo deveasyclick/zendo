@@ -17,7 +17,7 @@ func LoadRoutes(app *app.App) http.Handler {
 	mux := http.NewServeMux()
 
 	svc := conversation.NewService(app.DB.Queries)
-	hdl := conversation.NewHandler(svc)
+	hdl := conversation.NewHandler(svc, app.Logger)
 	conversation.RegisterRoutes(mux, hdl)
 
 	if app.Config.Env == "development" {
