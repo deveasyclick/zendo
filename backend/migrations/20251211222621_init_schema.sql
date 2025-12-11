@@ -1,3 +1,7 @@
+-- +goose Up
+-- +goose StatementBegin
+SELECT 'up SQL query';
+-- +goose StatementEnd
 CREATE TABLE visitors (
     id TEXT PRIMARY KEY,           -- store random visitor token
     ip_address TEXT,
@@ -36,3 +40,12 @@ CREATE TABLE messages (
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- +goose Down
+-- +goose StatementBegin
+SELECT 'down SQL query';
+-- +goose StatementEnd
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS conversations;
+DROP TABLE IF EXISTS agents;
+DROP TABLE IF EXISTS visitors;
