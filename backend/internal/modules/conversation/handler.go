@@ -7,6 +7,7 @@ import (
 	"github.com/deveasyclick/zendo/backend/internal/shared/response"
 	"github.com/deveasyclick/zendo/backend/internal/shared/response/apierrors"
 	"github.com/deveasyclick/zendo/backend/pkg/conv"
+	"go.uber.org/zap"
 )
 
 type createConversationReq struct {
@@ -22,7 +23,8 @@ type setStatusReq struct {
 }
 
 type handler struct {
-	svc Service
+	svc    Service
+	logger *zap.Logger
 }
 
 type Handler interface {
@@ -33,8 +35,8 @@ type Handler interface {
 	ListOpenConversations(w http.ResponseWriter, r *http.Request)
 }
 
-func NewHandler(svc Service) *handler {
-	return &handler{svc: svc}
+func NewHandler(svc Service, logger *zap.Logger) *handler {
+	return &handler{svc: svc, logger: logger}
 }
 
 // @Summary Create a new conversation
@@ -164,6 +166,7 @@ func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 func (h *handler) ListOpenConversations(w http.ResponseWriter, r *http.Request) {
 	conversations, err := h.svc.ListOpenConversations(r.Context())
 	if err != nil {
+		h.logger.Error("failed to list open conversations", zap.Error(err))
 		response.WriteError(w, http.StatusInternalServerError, ErrListOpenConversationsFailed, "failed to list open conversations", nil)
 		return
 	}
