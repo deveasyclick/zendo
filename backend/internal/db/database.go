@@ -21,7 +21,6 @@ func NewDB(ctx context.Context, dbUrl string) (*DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer pool.Close()
 
 	return &DB{Pool: pool, Queries: New(pool)}, nil
 }
