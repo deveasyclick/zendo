@@ -13,7 +13,21 @@ type Agent struct {
 	Email        string           `json:"email"`
 	Name         string           `json:"name"`
 	PasswordHash string           `json:"password_hash"`
+	WebsiteID    *int32           `json:"website_id"`
+	Role         string           `json:"role"`
+	Invited      *bool            `json:"invited"`
 	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+}
+
+type AgentInvite struct {
+	ID        int32            `json:"id"`
+	WebsiteID int32            `json:"website_id"`
+	Email     string           `json:"email"`
+	InvitedBy int32            `json:"invited_by"`
+	Token     string           `json:"token"`
+	Accepted  *bool            `json:"accepted"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 
 type Conversation struct {
@@ -21,6 +35,7 @@ type Conversation struct {
 	VisitorID *string          `json:"visitor_id"`
 	AgentID   *int64           `json:"agent_id"`
 	Status    string           `json:"status"`
+	WebsiteID *int32           `json:"website_id"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
@@ -31,7 +46,9 @@ type Message struct {
 	SenderType     string           `json:"sender_type"`
 	SenderID       *string          `json:"sender_id"`
 	Content        string           `json:"content"`
+	WebsiteID      *int32           `json:"website_id"`
 	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
 }
 
 type Visitor struct {
@@ -40,5 +57,14 @@ type Visitor struct {
 	UserAgent *string          `json:"user_agent"`
 	State     *string          `json:"state"`
 	Country   *string          `json:"country"`
+	WebsiteID *int32           `json:"website_id"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+}
+
+type Website struct {
+	ID        int32            `json:"id"`
+	Name      string           `json:"name"`
+	Host      *string          `json:"host"`
+	ApiKey    string           `json:"api_key"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }

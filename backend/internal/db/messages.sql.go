@@ -25,7 +25,7 @@ func (q *Queries) CountMessages(ctx context.Context, conversationID int32) (int6
 const createMessage = `-- name: CreateMessage :one
 INSERT INTO messages (conversation_id, sender_type, sender_id, content)
 VALUES ($1, $2, $3, $4)
-RETURNING id, conversation_id, sender_type, sender_id, content, created_at
+RETURNING id, conversation_id, sender_type, sender_id, content, website_id, created_at, updated_at
 `
 
 type CreateMessageParams struct {
@@ -49,7 +49,9 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (M
 		&i.SenderType,
 		&i.SenderID,
 		&i.Content,
+		&i.WebsiteID,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -64,8 +66,30 @@ func (q *Queries) DeleteMessage(ctx context.Context, id int32) error {
 	return err
 }
 
+const listMessage = `-- name: ListMessage :one
+SELECT id, conversation_id, sender_type, sender_id, content, website_id, created_at, updated_at
+FROM messages
+WHERE id = $1
+`
+
+func (q *Queries) ListMessage(ctx context.Context, id int32) (Message, error) {
+	row := q.db.QueryRow(ctx, listMessage, id)
+	var i Message
+	err := row.Scan(
+		&i.ID,
+		&i.ConversationID,
+		&i.SenderType,
+		&i.SenderID,
+		&i.Content,
+		&i.WebsiteID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const listMessagesByConversation = `-- name: ListMessagesByConversation :many
-SELECT id, conversation_id, sender_type, sender_id, content, created_at
+SELECT id, conversation_id, sender_type, sender_id, content, website_id, created_at, updated_at
 FROM messages
 WHERE conversation_id = $1
 ORDER BY created_at ASC
@@ -86,7 +110,9 @@ func (q *Queries) ListMessagesByConversation(ctx context.Context, conversationID
 			&i.SenderType,
 			&i.SenderID,
 			&i.Content,
+			&i.WebsiteID,
 			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}

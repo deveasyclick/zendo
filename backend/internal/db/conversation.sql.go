@@ -14,7 +14,7 @@ UPDATE conversations
 SET agent_id = $2,
     updated_at = NOW()
 WHERE id = $1
-RETURNING id, visitor_id, agent_id, status, created_at, updated_at
+RETURNING id, visitor_id, agent_id, status, website_id, created_at, updated_at
 `
 
 type AssignAgentParams struct {
@@ -30,6 +30,7 @@ func (q *Queries) AssignAgent(ctx context.Context, arg AssignAgentParams) (Conve
 		&i.VisitorID,
 		&i.AgentID,
 		&i.Status,
+		&i.WebsiteID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -51,7 +52,7 @@ func (q *Queries) CloseConversation(ctx context.Context, id int32) error {
 const createConversation = `-- name: CreateConversation :one
 INSERT INTO conversations (visitor_id)
 VALUES ($1)
-RETURNING id, visitor_id, agent_id, status, created_at, updated_at
+RETURNING id, visitor_id, agent_id, status, website_id, created_at, updated_at
 `
 
 func (q *Queries) CreateConversation(ctx context.Context, visitorID *string) (Conversation, error) {
@@ -62,6 +63,7 @@ func (q *Queries) CreateConversation(ctx context.Context, visitorID *string) (Co
 		&i.VisitorID,
 		&i.AgentID,
 		&i.Status,
+		&i.WebsiteID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -69,7 +71,7 @@ func (q *Queries) CreateConversation(ctx context.Context, visitorID *string) (Co
 }
 
 const getConversation = `-- name: GetConversation :one
-SELECT id, visitor_id, agent_id, status, created_at, updated_at
+SELECT id, visitor_id, agent_id, status, website_id, created_at, updated_at
 FROM conversations
 WHERE id = $1
 LIMIT 1
@@ -83,6 +85,7 @@ func (q *Queries) GetConversation(ctx context.Context, id int32) (Conversation, 
 		&i.VisitorID,
 		&i.AgentID,
 		&i.Status,
+		&i.WebsiteID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -90,7 +93,7 @@ func (q *Queries) GetConversation(ctx context.Context, id int32) (Conversation, 
 }
 
 const listConversationsByStatus = `-- name: ListConversationsByStatus :many
-SELECT id, visitor_id, agent_id, status, created_at, updated_at
+SELECT id, visitor_id, agent_id, status, website_id, created_at, updated_at
 FROM conversations
 WHERE status = $1
 ORDER BY updated_at DESC
@@ -110,6 +113,7 @@ func (q *Queries) ListConversationsByStatus(ctx context.Context, status string) 
 			&i.VisitorID,
 			&i.AgentID,
 			&i.Status,
+			&i.WebsiteID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -124,7 +128,7 @@ func (q *Queries) ListConversationsByStatus(ctx context.Context, status string) 
 }
 
 const listConversationsByVisitor = `-- name: ListConversationsByVisitor :many
-SELECT id, visitor_id, agent_id, status, created_at, updated_at
+SELECT id, visitor_id, agent_id, status, website_id, created_at, updated_at
 FROM conversations
 WHERE visitor_id = $1
 ORDER BY created_at DESC
@@ -144,6 +148,7 @@ func (q *Queries) ListConversationsByVisitor(ctx context.Context, visitorID *str
 			&i.VisitorID,
 			&i.AgentID,
 			&i.Status,
+			&i.WebsiteID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
