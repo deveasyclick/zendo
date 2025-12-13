@@ -10,7 +10,6 @@ func RegisterRoutes(mux *http.ServeMux, h Handler) *http.ServeMux {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
-	mux.HandleFunc("POST /conversations", h.CreateConversation)
 	mux.HandleFunc("GET /conversations/{id}", h.GetConversation)
 	mux.HandleFunc("PATCH /conversations/{id}/assign", h.AssignAgent)
 	mux.HandleFunc("PATCH /conversations/{id}/status", h.SetStatus)

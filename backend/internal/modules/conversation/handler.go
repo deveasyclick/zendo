@@ -28,7 +28,6 @@ type handler struct {
 }
 
 type Handler interface {
-	CreateConversation(w http.ResponseWriter, r *http.Request)
 	GetConversation(w http.ResponseWriter, r *http.Request)
 	AssignAgent(w http.ResponseWriter, r *http.Request)
 	SetStatus(w http.ResponseWriter, r *http.Request)
@@ -37,32 +36,6 @@ type Handler interface {
 
 func NewHandler(svc Service, logger *zap.Logger) *handler {
 	return &handler{svc: svc, logger: logger}
-}
-
-// @Summary Create a new conversation
-// @Description Creates a new conversation for a visitor
-// @Tags Conversations
-// @Accept json
-// @Produce json
-// @Param createConversationReq body createConversationReq true "Visitor ID"
-// @Success 201 {object} response.SuccessResponse
-// @Failure 400 {object} response.ErrorResponse
-// @Failure 500 {object} response.ErrorResponse
-// @Router /conversations [post]
-func (h *handler) CreateConversation(w http.ResponseWriter, r *http.Request) {
-	var body createConversationReq
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid request body", nil)
-		return
-	}
-
-	conversation, err := h.svc.CreateConversation(r.Context(), body.VisitorID)
-	if err != nil {
-		response.WriteError(w, http.StatusInternalServerError, apierrors.ErrInternal, "failed to create conversation", nil)
-		return
-	}
-
-	response.WriteJSON(w, http.StatusCreated, response.SuccessResponse{Data: conversation})
 }
 
 // @Summary Get a conversation
