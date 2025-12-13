@@ -15,6 +15,10 @@ import (
 
 func LoadRoutes(app *app.App) http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("ok"))
+	})
 
 	svc := conversation.NewService(app.DB.Queries)
 	hdl := conversation.NewHandler(svc, app.Logger)
