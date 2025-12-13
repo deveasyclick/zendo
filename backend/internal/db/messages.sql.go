@@ -66,14 +66,14 @@ func (q *Queries) DeleteMessage(ctx context.Context, id int32) error {
 	return err
 }
 
-const listMessage = `-- name: ListMessage :one
+const getMessage = `-- name: GetMessage :one
 SELECT id, conversation_id, sender_type, sender_id, content, website_id, created_at, updated_at
 FROM messages
 WHERE id = $1
 `
 
-func (q *Queries) ListMessage(ctx context.Context, id int32) (Message, error) {
-	row := q.db.QueryRow(ctx, listMessage, id)
+func (q *Queries) GetMessage(ctx context.Context, id int32) (Message, error) {
+	row := q.db.QueryRow(ctx, getMessage, id)
 	var i Message
 	err := row.Scan(
 		&i.ID,

@@ -3,7 +3,7 @@ INSERT INTO messages (conversation_id, sender_type, sender_id, content)
 VALUES ($1, $2, $3, $4)
 RETURNING *;
 
--- name: ListMessage :one
+-- name: GetMessage :one
 SELECT *
 FROM messages
 WHERE id = $1;
