@@ -23,6 +23,9 @@ pnpm-debug.log*
 /backend/pkg/mod/
 /backend/vendor/
 /backend/.env
+backend/main
+backend/tmp/
+
 *.exe
 *.exe~
 *.dll
@@ -63,5 +66,3 @@ pnpm-debug.log*
 *.tmp
 *.orig
 *.rej
-backend/main
-backend/tmp/zendo
