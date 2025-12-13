@@ -10,10 +10,6 @@ import (
 	"go.uber.org/zap"
 )
 
-type createConversationReq struct {
-	VisitorID string `json:"visitor_id"`
-}
-
 type assignAgentReq struct {
 	AgentID int64 `json:"agent_id"`
 }
