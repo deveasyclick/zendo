@@ -77,7 +77,7 @@ func (q *Queries) ListMessagesByConversation(ctx context.Context, conversationID
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Message
+	items := []Message{}
 	for rows.Next() {
 		var i Message
 		if err := rows.Scan(

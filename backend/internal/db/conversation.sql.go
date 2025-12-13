@@ -102,7 +102,7 @@ func (q *Queries) ListConversationsByStatus(ctx context.Context, status string) 
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Conversation
+	items := []Conversation{}
 	for rows.Next() {
 		var i Conversation
 		if err := rows.Scan(
@@ -136,7 +136,7 @@ func (q *Queries) ListConversationsByVisitor(ctx context.Context, visitorID *str
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Conversation
+	items := []Conversation{}
 	for rows.Next() {
 		var i Conversation
 		if err := rows.Scan(
