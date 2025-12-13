@@ -42,6 +42,11 @@ swagger:
 	cd $(BACKEND_DIR) && swag init --output docs --generalInfo cmd/zendo/main.go
 	@echo "✅ Swagger docs generated."
 
+# Generate Sqlc Queries
+sqlc:
+	cd $(BACKEND_DIR) && sqlc generate
+	@echo "✅ Sqlc queries generated."
+
 # ----------------------------------
 # Migrations
 # ----------------------------------
