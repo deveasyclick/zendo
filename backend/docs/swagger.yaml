@@ -5,14 +5,20 @@ definitions:
       agent_id:
         type: integer
     type: object
-  conversation.createConversationReq:
-    properties:
-      visitor_id:
-        type: string
-    type: object
   conversation.setStatusReq:
     properties:
       status:
+        type: string
+    type: object
+  db.CreateMessageParams:
+    properties:
+      content:
+        type: string
+      conversation_id:
+        type: integer
+      sender_id:
+        type: string
+      sender_type:
         type: string
     type: object
   response.ErrorResponse:
@@ -58,22 +64,22 @@ paths:
       summary: List open conversations
       tags:
       - Conversations
-    post:
+  /conversations/{conversationId}/messages:
+    get:
       consumes:
       - application/json
-      description: Creates a new conversation for a visitor
+      description: Get all messages for a specific conversation
       parameters:
-      - description: Visitor ID
-        in: body
-        name: createConversationReq
+      - description: Conversation ID
+        in: path
+        name: conversationId
         required: true
-        schema:
-          $ref: '#/definitions/conversation.createConversationReq'
+        type: integer
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/response.SuccessResponse'
         "400":
@@ -84,9 +90,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Create a new conversation
+      security:
+      - BearerAuth: []
+      summary: List messages
       tags:
-      - Conversations
+      - Messages
   /conversations/{id}:
     get:
       description: Retrieves a conversation by ID
@@ -184,6 +192,70 @@ paths:
       summary: Update conversation status
       tags:
       - Conversations
+  /messages:
+    post:
+      consumes:
+      - application/json
+      description: Create a message in a conversation
+      parameters:
+      - description: Create message payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/db.CreateMessageParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new message
+      tags:
+      - Messages
+  /messages/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a message by ID
+      parameters:
+      - description: Message ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            format: int64
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a message
+      tags:
+      - Messages
 securityDefinitions:
   BearerAuth:
     in: header
