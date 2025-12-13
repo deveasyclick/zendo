@@ -9,6 +9,7 @@ import (
 	"github.com/deveasyclick/zendo/backend/internal/app"
 	"github.com/deveasyclick/zendo/backend/internal/middleware"
 	"github.com/deveasyclick/zendo/backend/internal/modules/conversation"
+	"github.com/deveasyclick/zendo/backend/internal/modules/message"
 	swagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
@@ -20,10 +21,16 @@ func LoadRoutes(app *app.App) http.Handler {
 		w.Write([]byte("ok"))
 	})
 
+	// Register module routes
 	svc := conversation.NewService(app.DB.Queries)
 	hdl := conversation.NewHandler(svc, app.Logger)
 	conversation.RegisterRoutes(mux, hdl)
 
+	messageSvc := message.NewService(app.DB.Queries)
+	messageHandler := message.NewHandler(messageSvc, app.Logger)
+	message.RegisterRoutes(mux, messageHandler)
+
+	// Setup swagger route
 	if app.Config.Env == "development" {
 		parsedURL, err := url.Parse(app.Config.AppURL)
 		if err != nil {
