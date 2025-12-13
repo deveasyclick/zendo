@@ -46,12 +46,13 @@ func NewHandler(svc Service, logger *zap.Logger) *handler {
 func (h *handler) GetConversation(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
-		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", nil)
+		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", err)
 		return
 	}
 
 	conversation, err := h.svc.GetConversation(r.Context(), id)
 	if err != nil {
+		h.logger.Error(ErrGetConversationFailed, zap.Error(err))
 		response.WriteError(w, http.StatusInternalServerError, apierrors.ErrInternal, "failed to get conversation", nil)
 		return
 	}
@@ -73,18 +74,20 @@ func (h *handler) GetConversation(w http.ResponseWriter, r *http.Request) {
 func (h *handler) AssignAgent(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
-		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", nil)
+		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", err)
 		return
 	}
 
 	var body assignAgentReq
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		h.logger.Error(ErrAssignAgentFailed, zap.Error(err))
 		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid request body", nil)
 		return
 	}
 
 	conversation, err := h.svc.AssignAgent(r.Context(), id, body.AgentID)
 	if err != nil {
+		h.logger.Error(ErrAssignAgentFailed, zap.Error(err))
 		response.WriteError(w, http.StatusInternalServerError, ErrAssignAgentFailed, "failed to assign agent", nil)
 		return
 	}
@@ -106,18 +109,20 @@ func (h *handler) AssignAgent(w http.ResponseWriter, r *http.Request) {
 func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 	id, err := conv.StringToInt64(r.PathValue("id"))
 	if err != nil {
-		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", nil)
+		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid id", err)
 		return
 	}
 
 	var body setStatusReq
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		h.logger.Error(ErrSetConversationStatusFailed, zap.Error(err))
 		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "invalid request body", nil)
 		return
 	}
 
 	err = h.svc.SetConversationStatus(r.Context(), id, body.Status)
 	if err != nil {
+		h.logger.Error(ErrSetConversationStatusFailed, zap.Error(err))
 		response.WriteError(w, http.StatusInternalServerError, ErrSetConversationStatusFailed, "failed to set conversation status", nil)
 		return
 	}
@@ -135,7 +140,7 @@ func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 func (h *handler) ListOpenConversations(w http.ResponseWriter, r *http.Request) {
 	conversations, err := h.svc.ListOpenConversations(r.Context())
 	if err != nil {
-		h.logger.Error("failed to list open conversations", zap.Error(err))
+		h.logger.Error(ErrListOpenConversationsFailed, zap.Error(err))
 		response.WriteError(w, http.StatusInternalServerError, ErrListOpenConversationsFailed, "failed to list open conversations", nil)
 		return
 	}
