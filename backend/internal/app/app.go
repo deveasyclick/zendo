@@ -6,6 +6,7 @@ import (
 
 	"github.com/deveasyclick/zendo/backend/internal/config"
 	"github.com/deveasyclick/zendo/backend/internal/db"
+	"github.com/deveasyclick/zendo/backend/internal/validator"
 	"go.uber.org/zap"
 )
 
@@ -40,6 +41,8 @@ func New(ctx context.Context) (*App, error) {
 		DB:     newDB,
 		Logger: logger,
 	}
+
+	validator.Init()
 
 	return app, nil
 }
