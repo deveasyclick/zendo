@@ -1,10 +1,8 @@
 package message
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"github.com/deveasyclick/zendo/backend/internal/db"
 	"github.com/deveasyclick/zendo/backend/internal/shared/response"
 	"github.com/deveasyclick/zendo/backend/pkg/conv"
 	"go.uber.org/zap"
@@ -28,21 +26,20 @@ type handler struct {
 // @Tags         Messages
 // @Accept       json
 // @Produce      json
-// @Param        request  body      db.CreateMessageParams  true  "Create message payload"
+// @Param        payload  body  dto.CreateMessageDTO  true  "Create message payload"
 // @Success      201      {object}  response.SuccessResponse
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /messages [post]
 // @Security BearerAuth
 func (h handler) CreateMessage(w http.ResponseWriter, r *http.Request) {
-	var req db.CreateMessageParams
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		h.logger.Error(ErrMessageCreateFailed, zap.Error(err))
-		response.WriteError(w, http.StatusBadRequest, ErrMessageCreateFailed, "failed to create message", err)
+
+	req, err := ValidateCreateMessageBody(w, r)
+	if err != nil {
 		return
 	}
 
-	msg, err := h.s.CreateMessage(r.Context(), req)
+	msg, err := h.s.CreateMessage(r.Context(), *req)
 	if err != nil {
 		h.logger.Error(ErrMessageCreateFailed, zap.Error(err))
 		response.WriteError(w, http.StatusBadRequest, ErrMessageCreateFailed, "failed to create message", nil)
