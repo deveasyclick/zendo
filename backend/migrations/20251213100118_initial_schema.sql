@@ -10,6 +10,7 @@ CREATE TABLE websites (
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+-- created on page load once they can be identified
 CREATE TABLE visitors (
     id TEXT PRIMARY KEY,           -- store random visitor token
     ip_address TEXT,
