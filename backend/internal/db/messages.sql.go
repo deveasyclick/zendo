@@ -23,8 +23,8 @@ func (q *Queries) CountMessages(ctx context.Context, conversationID int32) (int6
 }
 
 const createMessage = `-- name: CreateMessage :one
-INSERT INTO messages (conversation_id, sender_type, sender_id, content)
-VALUES ($1, $2, $3, $4)
+INSERT INTO messages (conversation_id, sender_type, sender_id, website_id, content)
+VALUES ($1, $2, $3, $4, $5)
 RETURNING id, conversation_id, sender_type, sender_id, content, website_id, created_at, updated_at
 `
 
@@ -32,6 +32,7 @@ type CreateMessageParams struct {
 	ConversationID int32   `json:"conversation_id"`
 	SenderType     string  `json:"sender_type"`
 	SenderID       *string `json:"sender_id"`
+	WebsiteID      *int32  `json:"website_id"`
 	Content        string  `json:"content"`
 }
 
@@ -40,6 +41,7 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (M
 		arg.ConversationID,
 		arg.SenderType,
 		arg.SenderID,
+		arg.WebsiteID,
 		arg.Content,
 	)
 	var i Message
