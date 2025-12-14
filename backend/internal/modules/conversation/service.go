@@ -16,7 +16,9 @@ type Service interface {
 	AssignAgent(ctx context.Context, convID int64, agentID int64) (db.Conversation, error)
 	SetConversationStatus(ctx context.Context, convID int64, status string) error
 	GetConversation(ctx context.Context, convID int64) (db.Conversation, error)
+	FindOpenConversation(ctx context.Context, arg db.FindOpenConversationParams) (db.Conversation, error)
 	ListOpenConversations(ctx context.Context) ([]db.Conversation, error)
+	CheckOpenConversationById(ctx context.Context, arg db.FindOpenConversationByIdParams) (bool, error)
 }
 
 type service struct {
@@ -25,6 +27,22 @@ type service struct {
 
 func NewService(q *db.Queries) *service {
 	return &service{q: q}
+}
+
+func (s *service) FindOpenConversation(ctx context.Context, arg db.FindOpenConversationParams) (db.Conversation, error) {
+	return s.q.FindOpenConversation(ctx, db.FindOpenConversationParams{
+		WebsiteID: arg.WebsiteID,
+		VisitorID: arg.VisitorID,
+	})
+}
+
+func (s *service) CheckOpenConversationById(ctx context.Context, arg db.FindOpenConversationByIdParams) (bool, error) {
+	exists, err := s.q.FindOpenConversationById(ctx, arg)
+	if err != nil {
+		return false, err
+	}
+
+	return exists == 1, nil
 }
 
 func (s *service) CreateConversation(ctx context.Context, visitorID string) (db.Conversation, error) {
