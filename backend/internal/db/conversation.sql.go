@@ -70,6 +70,79 @@ func (q *Queries) CreateConversation(ctx context.Context, visitorID *string) (Co
 	return i, err
 }
 
+const findOpenConversation = `-- name: FindOpenConversation :one
+SELECT id, visitor_id, agent_id, status, website_id, created_at, updated_at
+FROM conversations
+WHERE website_id = $1
+  AND visitor_id = $2
+  AND status = 'open'
+ORDER BY created_at DESC
+LIMIT 1
+`
+
+type FindOpenConversationParams struct {
+	WebsiteID *int32  `json:"website_id"`
+	VisitorID *string `json:"visitor_id"`
+}
+
+func (q *Queries) FindOpenConversation(ctx context.Context, arg FindOpenConversationParams) (Conversation, error) {
+	row := q.db.QueryRow(ctx, findOpenConversation, arg.WebsiteID, arg.VisitorID)
+	var i Conversation
+	err := row.Scan(
+		&i.ID,
+		&i.VisitorID,
+		&i.AgentID,
+		&i.Status,
+		&i.WebsiteID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const findOpenConversationById = `-- name: FindOpenConversationById :one
+SELECT 1
+FROM conversations
+WHERE id = $1
+  AND website_id=$2
+  AND status = 'open'
+LIMIT 1
+`
+
+type FindOpenConversationByIdParams struct {
+	ID        int32  `json:"id"`
+	WebsiteID *int32 `json:"website_id"`
+}
+
+func (q *Queries) FindOpenConversationById(ctx context.Context, arg FindOpenConversationByIdParams) (int32, error) {
+	row := q.db.QueryRow(ctx, findOpenConversationById, arg.ID, arg.WebsiteID)
+	var column_1 int32
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
+const findOrCreateOpenConversation = `-- name: FindOrCreateOpenConversation :one
+INSERT INTO conversations (website_id, visitor_id, status)
+VALUES ($1, $2, 'open')
+ON CONFLICT (website_id, visitor_id)
+WHERE status = 'open'
+DO UPDATE SET
+  website_id = conversations.website_id
+RETURNING id
+`
+
+type FindOrCreateOpenConversationParams struct {
+	WebsiteID *int32  `json:"website_id"`
+	VisitorID *string `json:"visitor_id"`
+}
+
+func (q *Queries) FindOrCreateOpenConversation(ctx context.Context, arg FindOrCreateOpenConversationParams) (int32, error) {
+	row := q.db.QueryRow(ctx, findOrCreateOpenConversation, arg.WebsiteID, arg.VisitorID)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
 const getConversation = `-- name: GetConversation :one
 SELECT id, visitor_id, agent_id, status, website_id, created_at, updated_at
 FROM conversations
