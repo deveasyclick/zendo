@@ -1,6 +1,6 @@
 -- name: CreateMessage :one
-INSERT INTO messages (conversation_id, sender_type, sender_id, content)
-VALUES ($1, $2, $3, $4)
+INSERT INTO messages (conversation_id, sender_type, sender_id, website_id, content)
+VALUES ($1, $2, $3, $4, $5)
 RETURNING *;
 
 -- name: GetMessage :one
