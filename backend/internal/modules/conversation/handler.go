@@ -57,7 +57,7 @@ func (h *handler) GetConversation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: conversation})
+	response.WriteJSON(w, http.StatusOK, conversation)
 }
 
 // @Summary Assign an agent to a conversation
@@ -92,7 +92,7 @@ func (h *handler) AssignAgent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: conversation})
+	response.WriteJSON(w, http.StatusOK, conversation)
 }
 
 // @Summary Update conversation status
@@ -127,7 +127,7 @@ func (h *handler) SetStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: "status updated"})
+	response.WriteJSON(w, http.StatusOK, map[string]string{"Message": "Status updated"})
 }
 
 // @Summary List open conversations
@@ -145,5 +145,5 @@ func (h *handler) ListOpenConversations(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, response.SuccessResponse{Data: conversations})
+	response.WriteJSON(w, http.StatusOK, conversations)
 }
