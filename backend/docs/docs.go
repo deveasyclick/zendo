@@ -50,55 +50,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/conversations/{conversationId}/messages": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all messages for a specific conversation",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Messages"
-                ],
-                "summary": "List messages",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Conversation ID",
-                        "name": "conversationId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/conversations/{id}": {
             "get": {
                 "description": "Retrieves a conversation by ID",
@@ -267,17 +218,66 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Create message payload",
-                        "name": "request",
+                        "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/db.CreateMessageParams"
+                            "$ref": "#/definitions/message.CreateMessageDTO"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/conversations/{conversationId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all messages for a specific conversation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "List messages",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Conversation ID",
+                        "name": "conversationId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.SuccessResponse"
                         }
@@ -365,20 +365,37 @@ const docTemplate = `{
                 }
             }
         },
-        "db.CreateMessageParams": {
+        "message.CreateMessageDTO": {
             "type": "object",
+            "required": [
+                "content",
+                "senderType",
+                "websiteId"
+            ],
             "properties": {
-                "content": {
+                "agentId": {
                     "type": "string"
                 },
-                "conversation_id": {
+                "content": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "conversationId": {
                     "type": "integer"
                 },
-                "sender_id": {
+                "senderType": {
+                    "type": "string",
+                    "enum": [
+                        "visitor",
+                        "agent",
+                        "bot"
+                    ]
+                },
+                "visitorId": {
                     "type": "string"
                 },
-                "sender_type": {
-                    "type": "string"
+                "websiteId": {
+                    "type": "integer"
                 }
             }
         },
@@ -397,7 +414,13 @@ const docTemplate = `{
         "response.SuccessResponse": {
             "type": "object",
             "properties": {
-                "data": {}
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
             }
         }
     },
