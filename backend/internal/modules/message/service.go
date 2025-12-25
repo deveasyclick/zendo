@@ -2,7 +2,8 @@ package message
 
 import (
 	"context"
-	"fmt"
+	"database/sql"
+	"errors"
 
 	"github.com/deveasyclick/zendo/backend/internal/db"
 	"github.com/deveasyclick/zendo/backend/internal/modules/conversation"
@@ -20,47 +21,74 @@ type service struct {
 }
 
 func NewService(q *db.Queries, conversationService conversation.Service) *service {
-	return &service{q: q}
+	return &service{q: q, conversationService: conversationService}
 }
 
 func (s service) CreateMessage(ctx context.Context, dto CreateMessageDTO) (db.Message, error) {
-	conversationId := dto.ConversationID
-	if conversationId != nil {
-		exists, err := s.conversationService.CheckOpenConversationById(ctx, db.FindOpenConversationByIdParams{
-			WebsiteID: &dto.WebsiteID,
-		})
-
-		if err != nil {
+	var conversationID int32
+	// Case 1: conversationId explicitly provided → validate it
+	if dto.ConversationID != nil {
+		exists, err := s.conversationService.CheckOpenConversationById(
+			ctx,
+			db.FindOpenConversationByIdParams{
+				ID:        *dto.ConversationID,
+				WebsiteID: &dto.WebsiteID,
+			},
+		)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return db.Message{}, err
 		}
 
 		if !exists {
-			return db.Message{}, fmt.Errorf("conversation not found or closed")
+			return db.Message{}, ErrConversationClosedOrNotFound
 		}
-	}
 
-	if dto.ConversationID == nil {
-		conversation, err := s.conversationService.FindOpenConversation(ctx, db.FindOpenConversationParams{
-			WebsiteID: &dto.WebsiteID,
-			VisitorID: &dto.VisitorID,
-		})
+		conversationID = *dto.ConversationID
+	} else {
+		// Case 2: no conversationId → find or create open conversation
+		conversation, err := s.conversationService.FindOpenConversation(
+			ctx,
+			db.FindOpenConversationParams{
+				WebsiteID: &dto.WebsiteID,
+				VisitorID: &dto.VisitorID,
+			},
+		)
+
 		if err != nil {
-			return db.Message{}, err
-		}
-
-		if conversation.ID == 0 {
-			conversation, err = s.conversationService.CreateConversation(ctx, dto.VisitorID)
-			if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				conversation, err = s.conversationService.CreateConversation(ctx, dto.VisitorID)
+				if err != nil {
+					return db.Message{}, err
+				}
+			} else {
 				return db.Message{}, err
 			}
 		}
-		conversationId = &conversation.ID
+
+		conversationID = conversation.ID
+	}
+
+	// Resolve sender ID safely
+	var senderID *string
+	switch dto.SenderType {
+	case "visitor":
+		senderID = &dto.VisitorID
+
+	case "agent":
+		senderID = dto.AgentID
+
+	case "bot":
+		// senderID remains nil (system message)
+
+	default:
+		return db.Message{}, errors.New(ErrInvalidSenderType)
+
 	}
 
 	return s.q.CreateMessage(ctx, db.CreateMessageParams{
-		ConversationID: *conversationId,
+		ConversationID: conversationID,
 		SenderType:     dto.SenderType,
-		SenderID:       &dto.VisitorID,
+		SenderID:       senderID,
 		WebsiteID:      &dto.WebsiteID,
 		Content:        dto.Content,
 	})
