@@ -13,14 +13,16 @@ type ErrorResponse struct {
 }
 
 type SuccessResponse struct {
-	Data any `json:"data"`
+	Message string `json:"message"`
+	Status  int    `json:"status"`
+	Data    any    `json:"data"`
 }
 
 func WriteJSON(w http.ResponseWriter, status int, payload any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 
-	if err := json.NewEncoder(w).Encode(payload); err != nil {
+	if err := json.NewEncoder(w).Encode(SuccessResponse{Data: payload, Message: "success", Status: status}); err != nil {
 		log.Printf("json encode error: %v", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
@@ -36,5 +38,5 @@ func WriteError(w http.ResponseWriter, status int, code string, msg string, deta
 }
 
 func WriteOK(w http.ResponseWriter, data any) {
-	WriteJSON(w, http.StatusOK, SuccessResponse{Data: data})
+	WriteJSON(w, http.StatusOK, data)
 }
