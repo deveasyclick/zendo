@@ -1,6 +1,7 @@
 package message
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/deveasyclick/zendo/backend/internal/shared/response"
@@ -26,14 +27,13 @@ type handler struct {
 // @Tags         Messages
 // @Accept       json
 // @Produce      json
-// @Param        payload  body  dto.CreateMessageDTO  true  "Create message payload"
+// @Param        payload  body  CreateMessageDTO  true  "Create message payload"
 // @Success      201      {object}  response.SuccessResponse
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /messages [post]
 // @Security BearerAuth
 func (h handler) CreateMessage(w http.ResponseWriter, r *http.Request) {
-
 	req, err := ValidateCreateMessageBody(w, r)
 	if err != nil {
 		return
@@ -42,7 +42,24 @@ func (h handler) CreateMessage(w http.ResponseWriter, r *http.Request) {
 	msg, err := h.s.CreateMessage(r.Context(), *req)
 	if err != nil {
 		h.logger.Error(ErrMessageCreateFailed, zap.Error(err))
-		response.WriteError(w, http.StatusBadRequest, ErrMessageCreateFailed, "failed to create message", nil)
+		switch {
+		case errors.Is(err, ErrConversationClosedOrNotFound):
+			response.WriteError(
+				w,
+				http.StatusNotFound,
+				ErrMessageCreateFailed,
+				"conversation is closed or does not exist",
+				err,
+			)
+		default:
+			response.WriteError(
+				w,
+				http.StatusInternalServerError,
+				ErrMessageCreateFailed,
+				"failed to create message",
+				nil,
+			)
+		}
 		return
 	}
 
@@ -60,7 +77,7 @@ func (h handler) CreateMessage(w http.ResponseWriter, r *http.Request) {
 // @Success      200      {object}  response.SuccessResponse
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
-// @Router       /conversations/{conversationId}/messages [get]
+// @Router       /messages/conversations/{conversationId} [get]
 // @Security BearerAuth
 func (h handler) ListMessagesByConversation(w http.ResponseWriter, r *http.Request) {
 	conversationId, err := conv.StringToInt64(r.PathValue("conversationId"))
