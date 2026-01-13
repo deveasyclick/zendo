@@ -5,7 +5,7 @@ MIGRATIONS_DIR := ./backend/migrations
 BACKEND_DIR    := ./backend
 FRONTEND_DIR   := ./frontend
 
-DB_URL     ?= postgres://postgres:password@localhost:5432/zendo?sslmode=disable
+DB_URL     ?= postgres://postgres:password@localhost:5434/zendo?sslmode=disable
 
 .PHONY: dev api front back db lint swagger tools migrate-up migrate-down migrate-status migrate-new help
 

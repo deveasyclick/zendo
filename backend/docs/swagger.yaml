@@ -50,6 +50,29 @@ definitions:
       status:
         type: integer
     type: object
+  visitor.CreateVisitorDTO:
+    properties:
+      country:
+        minLength: 1
+        type: string
+      ipAddress:
+        minLength: 6
+        type: string
+      state:
+        minLength: 1
+        type: string
+      userAgent:
+        minLength: 2
+        type: string
+      websiteId:
+        type: integer
+    required:
+    - country
+    - ipAddress
+    - state
+    - userAgent
+    - websiteId
+    type: object
 host: localhost:3001
 info:
   contact:
@@ -273,6 +296,38 @@ paths:
       summary: List messages
       tags:
       - Messages
+  /visitors:
+    post:
+      consumes:
+      - application/json
+      description: Create a visitor
+      parameters:
+      - description: Create visitor payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/visitor.CreateVisitorDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new visitor
+      tags:
+      - Visitors
 securityDefinitions:
   BearerAuth:
     in: header

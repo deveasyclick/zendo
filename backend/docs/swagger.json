@@ -340,6 +340,57 @@
                     }
                 }
             }
+        },
+        "/visitors": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a visitor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitors"
+                ],
+                "summary": "Create a new visitor",
+                "parameters": [
+                    {
+                        "description": "Create visitor payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/visitor.CreateVisitorDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -413,6 +464,37 @@
                     "type": "string"
                 },
                 "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "visitor.CreateVisitorDTO": {
+            "type": "object",
+            "required": [
+                "country",
+                "ipAddress",
+                "state",
+                "userAgent",
+                "websiteId"
+            ],
+            "properties": {
+                "country": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "ipAddress": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "state": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "userAgent": {
+                    "type": "string",
+                    "minLength": 2
+                },
+                "websiteId": {
                     "type": "integer"
                 }
             }

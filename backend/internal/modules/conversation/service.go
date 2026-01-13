@@ -29,6 +29,9 @@ func NewService(q *db.Queries) *service {
 	return &service{q: q}
 }
 
+/*
+Find visitor open conversation
+*/
 func (s *service) FindOpenConversation(ctx context.Context, arg db.FindOpenConversationParams) (db.Conversation, error) {
 	return s.q.FindOpenConversation(ctx, db.FindOpenConversationParams{
 		WebsiteID: arg.WebsiteID,
