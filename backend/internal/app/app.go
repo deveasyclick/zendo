@@ -7,6 +7,7 @@ import (
 	"github.com/deveasyclick/zendo/backend/internal/config"
 	"github.com/deveasyclick/zendo/backend/internal/db"
 	"github.com/deveasyclick/zendo/backend/internal/validator"
+	"github.com/deveasyclick/zendo/backend/pkg/auth/clerk_auth"
 	"go.uber.org/zap"
 )
 
@@ -17,10 +18,14 @@ type App struct {
 }
 
 func New(ctx context.Context) (*App, error) {
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("Unable to load configuration: %v", err)
 	}
+
+	// initialize clerk auth
+	clerk_auth.Init(cfg.ClerkSecret)
 
 	newDB, err := db.NewDB(ctx, cfg.DB_URL)
 	if err != nil {
