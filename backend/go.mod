@@ -4,6 +4,7 @@ go 1.25
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
+	github.com/clerk/clerk-sdk-go/v2 v2.5.1
 	github.com/go-playground/validator/v10 v10.29.0
 	github.com/jackc/pgx/v5 v5.7.6
 	github.com/joho/godotenv v1.5.1
@@ -18,6 +19,7 @@ require (
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.11 // indirect
+	github.com/go-jose/go-jose/v3 v3.0.4 // indirect
 	github.com/go-openapi/jsonpointer v0.22.3 // indirect
 	github.com/go-openapi/jsonreference v0.21.3 // indirect
 	github.com/go-openapi/spec v0.22.1 // indirect
