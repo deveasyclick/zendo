@@ -7,7 +7,7 @@ import (
 	"github.com/deveasyclick/zendo/backend/internal/config"
 	"github.com/deveasyclick/zendo/backend/internal/db"
 	"github.com/deveasyclick/zendo/backend/internal/validator"
-	"github.com/deveasyclick/zendo/backend/pkg/auth/clerk_auth"
+	"github.com/deveasyclick/zendo/backend/pkg/auth/clerkauth"
 	"go.uber.org/zap"
 )
 
@@ -25,7 +25,7 @@ func New(ctx context.Context) (*App, error) {
 	}
 
 	// initialize clerk auth
-	clerk_auth.Init(cfg.ClerkSecret)
+	clerkauth.Init(cfg.ClerkSecret)
 
 	newDB, err := db.NewDB(ctx, cfg.DB_URL)
 	if err != nil {
