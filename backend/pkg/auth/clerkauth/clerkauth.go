@@ -1,4 +1,4 @@
-package clerk_auth
+package clerkauth
 
 import (
 	"context"
