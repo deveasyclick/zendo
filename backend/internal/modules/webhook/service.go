@@ -31,8 +31,8 @@ type WebhookService interface {
 	HandleEvent(ctx context.Context, event *WebhookEvent) error
 }
 
-func NewService(as agentService, clerkauth clerkAuth, logger *zap.Logger) WebhookService {
-	s := &service{agentSvc: as, clerkauth: clerkauth, logger: logger}
+func NewService(as agentService, logger *zap.Logger) WebhookService {
+	s := &service{agentSvc: as, logger: logger}
 
 	s.eventHandlers = map[string]func(context.Context, map[string]interface{}) error{
 		"user.created": s.createAdmin,
@@ -62,7 +62,13 @@ func (s *service) createAdmin(ctx context.Context, data map[string]interface{}) 
 		return ErrEmailNotFoundInWebhook
 	}
 
-	email := adminData.EmailAddresses[0].EmailAddress
+	email := ""
+	for _, e := range adminData.EmailAddresses {
+		if e.EmailAddress != "" {
+			email = e.EmailAddress
+			break
+		}
+	}
 
 	admin, err := s.agentSvc.FindByEmail(ctx, email)
 	if err != nil {
