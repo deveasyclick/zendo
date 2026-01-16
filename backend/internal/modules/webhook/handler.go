@@ -39,7 +39,6 @@ func NewHandler(svc WebhookService, logger *zap.Logger, cfg config.Config) *hand
 func (h *handler) HandleClerkEvents(w http.ResponseWriter, r *http.Request) {
 	if h.cfg.ClerkWebhookSigningSecret == "" {
 		h.logger.Error("missing clerk webhook signing secret")
-		response.WriteJSON(w, http.StatusOK, nil)
 		response.WriteError(w, http.StatusInternalServerError, apierrors.ErrInternal, "missing clerk webhook signing secret", nil)
 		return
 	}
