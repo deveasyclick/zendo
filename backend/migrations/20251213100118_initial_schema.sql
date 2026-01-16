@@ -25,9 +25,9 @@ CREATE TABLE agents (
     id SERIAL PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
     website_id INT NULL REFERENCES websites(id),
-    role TEXT NOT NULL DEFAULT 'agent',          --
+    role TEXT NOT NULL DEFAULT 'agent',        
+    clerk_id TEXT NOT NULL,
     invited BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()

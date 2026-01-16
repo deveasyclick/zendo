@@ -9,15 +9,15 @@ import (
 )
 
 type Agent struct {
-	ID           int32            `json:"id"`
-	Email        string           `json:"email"`
-	Name         string           `json:"name"`
-	PasswordHash string           `json:"password_hash"`
-	WebsiteID    *int32           `json:"website_id"`
-	Role         string           `json:"role"`
-	Invited      *bool            `json:"invited"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
-	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+	ID        int32            `json:"id"`
+	Email     string           `json:"email"`
+	Name      string           `json:"name"`
+	WebsiteID *int32           `json:"website_id"`
+	Role      string           `json:"role"`
+	ClerkID   string           `json:"clerk_id"`
+	Invited   *bool            `json:"invited"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
 
 type AgentInvite struct {
