@@ -62,9 +62,12 @@ type Visitor struct {
 }
 
 type Website struct {
-	ID        int32            `json:"id"`
-	Name      string           `json:"name"`
-	Host      *string          `json:"host"`
-	ApiKey    string           `json:"api_key"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
+	ID         int32            `json:"id"`
+	Name       string           `json:"name"`
+	Domain     string           `json:"domain"`
+	PublicKey  string           `json:"public_key"`
+	SecretHash string           `json:"secret_hash"`
+	CreatedAt  pgtype.Timestamp `json:"created_at"`
+	IsActive   bool             `json:"is_active"`
+	Settings   []byte           `json:"settings"`
 }
