@@ -5,6 +5,7 @@ import (
 
 	"github.com/deveasyclick/zendo/backend/internal/config"
 	"github.com/deveasyclick/zendo/backend/internal/shared/response"
+	"github.com/deveasyclick/zendo/backend/internal/shared/response/apierrors"
 	"go.uber.org/zap"
 )
 
@@ -18,8 +19,8 @@ type Handler interface {
 	HandleClerkEvents(w http.ResponseWriter, r *http.Request)
 }
 
-func NewHandler(svc WebhookService, logger *zap.Logger) *handler {
-	return &handler{svc: svc, logger: logger}
+func NewHandler(svc WebhookService, logger *zap.Logger, cfg config.Config) *handler {
+	return &handler{svc: svc, logger: logger, cfg: cfg}
 }
 
 // HandleClerkEvents godoc
@@ -39,13 +40,14 @@ func (h *handler) HandleClerkEvents(w http.ResponseWriter, r *http.Request) {
 	if h.cfg.ClerkWebhookSigningSecret == "" {
 		h.logger.Error("missing clerk webhook signing secret")
 		response.WriteJSON(w, http.StatusOK, nil)
+		response.WriteError(w, http.StatusInternalServerError, apierrors.ErrInternal, "missing clerk webhook signing secret", nil)
 		return
 	}
 
 	event, err := h.svc.VerifyWebhook(h.cfg.ClerkWebhookSigningSecret, r)
 	if err != nil {
 		h.logger.Error("error verifying clerk webhook", zap.Error(err))
-		response.WriteJSON(w, http.StatusOK, nil)
+		response.WriteError(w, http.StatusBadRequest, apierrors.ErrBadRequest, "clerk webhook verification failed", err)
 		return
 	}
 
@@ -55,6 +57,8 @@ func (h *handler) HandleClerkEvents(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// TODO: Send slack alert
 		h.logger.Error("Error handling clerk webhook event", zap.String("event", event.Type), zap.Error(err))
+		response.WriteError(w, http.StatusInternalServerError, apierrors.ErrInternal, "clerk webhook failed", err)
+		return
 	}
 
 	response.WriteJSON(w, http.StatusOK, nil)
