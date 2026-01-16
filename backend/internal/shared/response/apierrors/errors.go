@@ -1,6 +1,14 @@
 package apierrors
 
-const (
-	ErrInternal   = "INTERNAL_SERVER_ERROR"
-	ErrBadRequest = "BAD_REQUEST"
+import "errors"
+
+var (
+	ErrInternal          = errors.New("internal server error")
+	ErrBadRequest        = errors.New("bad request")
+	ErrDecodeRequestBody = errors.New("error decoding request body")
+)
+
+var (
+	ErrCodeBadRequest = "BAD_REQUEST"
+	ErrCodeInternal   = "INTERNAL_SERVER_ERROR"
 )
