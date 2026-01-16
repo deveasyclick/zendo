@@ -26,7 +26,6 @@ type ClerkAuth interface {
 	ClerkIDFromContext(ctx context.Context) (string, bool)
 	UserFromContext(ctx context.Context) (*ContextUser, error)
 	SetOrg(ctx context.Context, clerkID string, orgID string) error
-	DeleteUser(ctx context.Context, userClerkID string) error
 }
 
 type client struct{}
@@ -99,10 +98,5 @@ func (s *client) SetOrg(ctx context.Context, clerkID string, orgID string) error
 	raw := json.RawMessage(dataBytes)
 	_, err := user.UpdateMetadata(ctx, clerkID, &user.UpdateMetadataParams{PublicMetadata: &raw})
 
-	return err
-}
-
-func (s *client) DeleteUser(ctx context.Context, userClerkID string) error {
-	_, err := user.Delete(ctx, userClerkID)
 	return err
 }
