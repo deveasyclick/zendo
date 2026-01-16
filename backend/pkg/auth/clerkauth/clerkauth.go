@@ -102,16 +102,6 @@ func (s *client) SetOrg(ctx context.Context, clerkID string, orgID string) error
 	return err
 }
 
-// func (s *client) SetRoleAndExternalID(ctx context.Context, userClerkID string, externalID string, role model.Role) error {
-// 	dataBytes, _ := json.Marshal(map[string]model.Role{
-// 		"role": role,
-// 	})
-// 	raw := json.RawMessage(dataBytes)
-// 	_, err := user.Update(ctx, userClerkID, &user.UpdateParams{ExternalID: &externalID, PublicMetadata: &raw})
-
-// 	return err
-// }
-
 func (s *client) DeleteUser(ctx context.Context, userClerkID string) error {
 	_, err := user.Delete(ctx, userClerkID)
 	return err
