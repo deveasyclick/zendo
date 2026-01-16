@@ -62,13 +62,7 @@ func (s *service) createAdmin(ctx context.Context, data map[string]interface{}) 
 		return ErrEmailNotFoundInWebhook
 	}
 
-	email := ""
-	for _, e := range adminData.EmailAddresses {
-		if e.EmailAddress != "" {
-			email = e.EmailAddress
-			break
-		}
-	}
+	email := adminData.EmailAddresses[0].EmailAddress
 
 	admin, err := s.agentSvc.FindByEmail(ctx, email)
 	if err != nil {
