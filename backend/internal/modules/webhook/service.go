@@ -9,15 +9,11 @@ import (
 	"net/http"
 
 	"github.com/deveasyclick/zendo/backend/internal/db"
-	"github.com/deveasyclick/zendo/backend/internal/shared/role"
+	"github.com/deveasyclick/zendo/backend/internal/shared/constants"
 	"github.com/deveasyclick/zendo/backend/pkg/svix"
 	"github.com/go-viper/mapstructure/v2"
 	"go.uber.org/zap"
 )
-
-type clerkAuth interface {
-	DeleteUser(ctx context.Context, userClerkID string) error
-}
 
 type agentService interface {
 	Create(ctx context.Context, args db.CreateAgentParams) (db.Agent, error)
@@ -26,7 +22,6 @@ type agentService interface {
 
 type service struct {
 	agentSvc      agentService
-	clerkauth     clerkAuth
 	logger        *zap.Logger
 	eventHandlers map[string]func(context.Context, map[string]interface{}) error
 }
@@ -84,7 +79,7 @@ func (s *service) createAdmin(ctx context.Context, data map[string]interface{}) 
 		ClerkID: adminData.ID,
 		Name:    fmt.Sprintf("%s %s", adminData.FirstName, adminData.LastName),
 		Email:   email,
-		Role:    string(role.ADMIN),
+		Role:    string(constants.ROLEADMIN),
 	})
 
 	if err != nil {
