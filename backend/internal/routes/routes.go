@@ -8,9 +8,12 @@ import (
 	"github.com/deveasyclick/zendo/backend/docs"
 	"github.com/deveasyclick/zendo/backend/internal/app"
 	"github.com/deveasyclick/zendo/backend/internal/middleware"
+	"github.com/deveasyclick/zendo/backend/internal/modules/agents"
 	"github.com/deveasyclick/zendo/backend/internal/modules/conversation"
 	"github.com/deveasyclick/zendo/backend/internal/modules/message"
 	"github.com/deveasyclick/zendo/backend/internal/modules/visitor"
+	"github.com/deveasyclick/zendo/backend/internal/modules/webhook"
+	"github.com/deveasyclick/zendo/backend/pkg/auth/clerkauth"
 	swagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
@@ -37,6 +40,17 @@ func LoadRoutes(app *app.App) http.Handler {
 	visitorSvc := visitor.NewService(app.DB.Queries)
 	visitorHandler := visitor.NewHandler(visitorSvc, app.Logger)
 	visitor.RegisterRoutes(mux, visitorHandler)
+
+	// Agent
+	agentSvc := agents.NewService(*app.DB.Queries)
+
+	// clerk service
+	clerkSvc := clerkauth.NewAuth()
+
+	// Webhook routes
+	webhookSvc := webhook.NewService(agentSvc, clerkSvc, app.Logger)
+	webhookHandler := webhook.NewHandler(webhookSvc, app.Logger)
+	webhook.RegisterRoutes(mux, webhookHandler)
 
 	// Setup swagger route
 	if app.Config.Env == "development" {
