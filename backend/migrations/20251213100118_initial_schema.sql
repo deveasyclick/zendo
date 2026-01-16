@@ -5,9 +5,12 @@ SELECT 'up SQL query';
 CREATE TABLE websites (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  host TEXT,
-  api_key TEXT UNIQUE NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+  domain TEXT NOT NULL,
+  public_key TEXT UNIQUE NOT NULL,
+  secret_hash TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  settings JSONB NOT NULL DEFAULT '{}'
 );
 
 -- created on page load once they can be identified
