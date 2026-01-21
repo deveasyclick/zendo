@@ -4,6 +4,7 @@ import DashboardHome from "../pages/dashboard/Dashboard";
 import RouteGuard from "./guard";
 import { lazy, Suspense } from "react";
 import MainLayout from "@/layouts/main";
+import Home from "@/pages/home";
 
 const Signin = lazy(() => import("@/pages/auth/signin"));
 const SignUp = lazy(() => import("@/pages/auth/signup"));
@@ -15,6 +16,7 @@ export default function AppRoutes() {
         {/* Public routes */}
         <Route path="/signin/*" element={<Signin />} />
         <Route path="/signup/*" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
 
         {/* Onboarding routes */}
         <Route element={<RouteGuard />}>
@@ -25,7 +27,7 @@ export default function AppRoutes() {
 
         {/* Private routes */}
         <Route element={<RouteGuard />}>
-          <Route path="/" element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
           </Route>
         </Route>
