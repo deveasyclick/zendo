@@ -1,7 +1,6 @@
 import Image from "@/components/Image";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { IMAGES } from "@/constants/image";
 import { SignOutButton } from "@clerk/react-router";
 
 export default function Header() {
@@ -11,19 +10,19 @@ export default function Header() {
         <section className="flex justify-start items-center">
           <a href="#" className="flex items-center justify-between mr-4">
             <Image
-              src={IMAGES.LOGO}
+              src="logo.svg"
               className="mr-3 h-8"
               alt="Logo"
               fallbackSrc="/logo.png"
               objectFit="contain"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white hidden sm:inline-block">
-              OpenB2B
+              Zendo
             </span>
           </a>
         </section>
         <section className="flex items-center lg:order-2">
-          <ThemeToggle className="mr-2" />
+          <ThemeToggle className="mr-2 cursor-pointer" />
           <SignOutButton>
             <Button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 dark:hover:bg-primary-600 cursor-pointer">
               Sign Out
