@@ -12,7 +12,6 @@ import { NavLink, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import Logo from "./Logo";
 import NavUser from "./NavUser";
-import Icon from "@/components/icons";
 
 export default function DashboardSidebar() {
   const location = useLocation();
@@ -39,7 +38,7 @@ export default function DashboardSidebar() {
                   )}
                 >
                   <NavLink to={item.href}>
-                    <Icon name={item.iconName} className="shrink-0" />
+                    <item.icon className="shrink-0" />
                     {item.label}
                   </NavLink>
                 </SidebarMenuButton>

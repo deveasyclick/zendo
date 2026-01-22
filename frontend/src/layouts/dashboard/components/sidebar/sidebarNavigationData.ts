@@ -1,4 +1,12 @@
-import type { IconNames } from "@/types";
+import {
+  BarChart2,
+  LayoutGridIcon,
+  MessageCircleMoreIcon,
+  Settings,
+  ShoppingCart,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * Type definition for sidebar navigation items
@@ -7,7 +15,7 @@ export type SidebarNavItemData = {
   id: string;
   label: string;
   href: string;
-  iconName: IconNames;
+  icon: LucideIcon;
   badge?: {
     text: string;
     variant: "primary" | "gray" | "success";
@@ -19,27 +27,39 @@ export type SidebarNavItemData = {
  */
 export const sidebarNavItems: SidebarNavItemData[] = [
   {
-    id: "products",
-    label: "Products",
-    href: "/products",
-    iconName: "package",
+    id: "dashboard",
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutGridIcon,
   },
   {
-    id: "orders",
-    label: "Orders",
-    href: "/orders",
-    iconName: "shoppingCart",
+    id: "conversations",
+    label: "Conversations",
+    href: "/dashboard/conversations",
+    icon: MessageCircleMoreIcon,
   },
   {
-    id: "invoices",
-    label: "Invoices",
-    href: "/invoices",
-    iconName: "task",
+    id: "integrations",
+    label: "Integrations",
+    href: "/dashboard/integrations",
+    icon: ShoppingCart,
   },
   {
-    id: "reports",
-    label: "Reports",
-    href: "/reports",
-    iconName: "barchart",
+    id: "analytics",
+    label: "Analytics",
+    href: "/dashboard/analytics",
+    icon: BarChart2,
+  },
+  {
+    id: "team",
+    label: "Team",
+    href: "/dashboard/team",
+    icon: Users,
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings,
   },
 ];
