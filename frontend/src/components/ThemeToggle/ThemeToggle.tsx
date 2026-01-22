@@ -1,5 +1,5 @@
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../contexts/theme";
-import Icon from "../icons";
 
 type ThemeToggleProps = {
   className?: string;
@@ -22,9 +22,9 @@ const ThemeToggle = ({ className = "" }: ThemeToggleProps) => {
     >
       {/* Show sun icon in dark mode, moon icon in light mode */}
       {isDarkMode ? (
-        <Icon name="sun" className="w-5 h-5" aria-hidden="true" />
+        <Sun name="sun" className="w-5 h-5" aria-hidden="true" />
       ) : (
-        <Icon name="moon" className="w-5 h-5" aria-hidden="true" />
+        <Moon name="sun" className="w-5 h-5" aria-hidden="true" />
       )}
       <span className="sr-only">
         {isDarkMode ? "Switch to light mode" : "Switch to dark mode"}

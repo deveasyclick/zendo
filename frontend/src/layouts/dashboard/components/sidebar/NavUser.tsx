@@ -1,4 +1,4 @@
-import { ChevronsUpDown } from "lucide-react";
+import { Bell, ChevronsUpDown, LogOut, Settings, Sparkle } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -17,7 +17,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import type React from "react";
-import Icon from "@/components/icons";
 import { useMemo } from "react";
 import { cast, getInitials } from "@/utils";
 import { EXTERNAL_IMAGES } from "@/constants/image";
@@ -79,18 +78,18 @@ const NavUser: React.FC<NavUserProps> = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Icon name="sparkle" className="w-5 h-5" />
+                <Sparkle className="w-5 h-5" />
                 {user.firstName}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Icon name="bell" className="w-5 h-5" />
+                <Bell className="w-5 h-5" />
                 Notifications
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <Icon name="settings" className="w-5 h-5" />
+                <Settings className="w-5 h-5" />
                 Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -98,7 +97,7 @@ const NavUser: React.FC<NavUserProps> = () => {
             <DropdownMenuItem className="cursor-pointer">
               <SignOutButton>
                 <div className="contents">
-                  <Icon name="logout" className="w-5 h-5" />
+                  <LogOut className="w-5 h-5" />
                   Log out
                 </div>
               </SignOutButton>
