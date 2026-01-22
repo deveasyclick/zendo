@@ -8,7 +8,7 @@ import Home from "@/pages/home";
 
 const Signin = lazy(() => import("@/pages/auth/signin"));
 const SignUp = lazy(() => import("@/pages/auth/signup"));
-const Onboarding = lazy(() => import("@/pages/org/onboarding/onboard"));
+const Onboarding = lazy(() => import("@/pages/onboarding"));
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
