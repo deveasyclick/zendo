@@ -22,10 +22,7 @@ const Hero = () => (
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button className="bg-primary hover:bg-primary/90 text-white text-lg font-bold px-8 py-7.5 rounded-xl transition-all shadow-xl shadow-primary/25  gap-2 cursor-pointer">
-            Get Started for Free <ArrowRight />
-          </Button>
-          <Button className="bg-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 text-lg font-bold px-8 py-7.5 rounded-xl transition-all border border-slate-200 cursor-pointer">
-            Book a Demo
+            <a href="/signup">Get Started for Free</a> <ArrowRight />
           </Button>
         </div>
       </div>

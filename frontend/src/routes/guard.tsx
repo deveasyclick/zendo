@@ -3,7 +3,7 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import { useAuth, useUser } from "@clerk/react-router";
 import { PageLoader } from "@/components/loaders";
 
-type Role = "admin" | "viewer" | "sales" | "distributor";
+type Role = "admin" | "agent" | "visitor";
 
 interface RequireRoleProps {
   allowedRoles?: Role[];
