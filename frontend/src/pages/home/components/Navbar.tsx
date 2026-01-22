@@ -25,10 +25,12 @@ const Navbar = () => (
         ))}
       </nav>
       <div className="flex items-center gap-4">
-        <button className="hidden sm:block text-sm font-bold px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-          Login
-        </button>
-        <Button className="px-5 text-white cursor-pointer">Get Started</Button>
+        <Button className="hidden sm:block text-sm font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer text-white">
+          <a href="/signin">Login</a>
+        </Button>
+        <Button className="px-5 text-white cursor-pointer">
+          <a href="/signup">Get Started</a>
+        </Button>
       </div>
     </div>
   </header>
