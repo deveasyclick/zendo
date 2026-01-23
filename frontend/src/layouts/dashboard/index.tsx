@@ -13,8 +13,8 @@ export default function DashboardLayout() {
           <Sidebar />
 
           {/* Content area */}
-          <main className="flex flex-col flex-1 min-w-0">
-            <SidebarTrigger className="mb-4" />
+          <main className="flex flex-col flex-1 min-w-0 bg-gray-50 dark:bg-gray-900!">
+            <SidebarTrigger className="bg-gray-50 dark:bg-gray-900!" />
             <Outlet />
           </main>
         </div>

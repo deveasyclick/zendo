@@ -2,8 +2,8 @@ import {
   BarChart2,
   LayoutGridIcon,
   MessageCircleMoreIcon,
+  Puzzle,
   Settings,
-  ShoppingCart,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -42,7 +42,7 @@ export const sidebarNavItems: SidebarNavItemData[] = [
     id: "integrations",
     label: "Integrations",
     href: "/dashboard/integrations",
-    icon: ShoppingCart,
+    icon: Puzzle,
   },
   {
     id: "analytics",
