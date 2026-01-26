@@ -1,8 +1,31 @@
-export default function Dashboard() {
+import { ChannelHealth } from "./components/ChannelHealth";
+import { RecentActivity } from "./components/RecentActivity";
+import { StatsGrid } from "./components/stats/StatsGrid";
+import { Topbar } from "./components/TopBar";
+
+function Dashboard() {
   return (
-    <div className="p-4 bg-gray-950 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-white">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </div>
+    <section>
+      <Topbar />
+      <div className="space-y-8 p-8">
+        <header>
+          <h2 className="text-2xl font-bold">Real-time Overview</h2>
+          <p className="text-gray-500">
+            Live snapshots of your active support operations.
+          </p>
+        </header>
+        <StatsGrid />
+        <main>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <RecentActivity />
+            </div>
+            <ChannelHealth />
+          </div>
+        </main>
+      </div>
+    </section>
   );
 }
+
+export default Dashboard;
