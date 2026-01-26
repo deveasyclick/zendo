@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import DashboardLayout from "../layouts/dashboard";
-import DashboardHome from "../pages/dashboard/Dashboard";
+import DashboardHome from "../pages/dashboard";
 import RouteGuard from "./guard";
 import { lazy, Suspense } from "react";
 import MainLayout from "@/layouts/main";
@@ -17,6 +17,10 @@ export default function AppRoutes() {
         <Route path="/signin/*" element={<Signin />} />
         <Route path="/signup/*" element={<SignUp />} />
         <Route path="/" element={<Home />} />
+        {/**TODO: remove this as it's added for testing purpose */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+        </Route>
 
         {/* Onboarding routes */}
         <Route element={<RouteGuard />}>
