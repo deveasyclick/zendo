@@ -9,6 +9,7 @@ import Home from "@/pages/home";
 const Signin = lazy(() => import("@/pages/auth/signin"));
 const SignUp = lazy(() => import("@/pages/auth/signup"));
 const Onboarding = lazy(() => import("@/pages/onboarding"));
+const Conversations = lazy(() => import("@/pages/conversations"));
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         {/**TODO: remove this as it's added for testing purpose */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
+          <Route path="conversations" element={<Conversations />} />
         </Route>
 
         {/* Onboarding routes */}
@@ -30,11 +32,11 @@ export default function AppRoutes() {
         </Route>
 
         {/* Private routes */}
-        <Route element={<RouteGuard />}>
+        {/* <Route element={<RouteGuard />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
           </Route>
-        </Route>
+        </Route> */}
       </Routes>
     </Suspense>
   );
