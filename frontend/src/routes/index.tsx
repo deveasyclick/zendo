@@ -10,6 +10,8 @@ const Signin = lazy(() => import("@/pages/auth/signin"));
 const SignUp = lazy(() => import("@/pages/auth/signup"));
 const Onboarding = lazy(() => import("@/pages/onboarding"));
 const Conversations = lazy(() => import("@/pages/conversations"));
+const Integrations = lazy(() => import("@/pages/integrations"));
+
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -22,6 +24,7 @@ export default function AppRoutes() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
           <Route path="conversations" element={<Conversations />} />
+          <Route path="integrations" element={<Integrations />} />
         </Route>
 
         {/* Onboarding routes */}
