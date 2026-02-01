@@ -1,5 +1,4 @@
 import {
-  BarChart2,
   LayoutGridIcon,
   MessageCircleMoreIcon,
   Puzzle,
@@ -20,6 +19,7 @@ export type SidebarNavItemData = {
     text: string;
     variant: "primary" | "gray" | "success";
   };
+  items?: { title: string; url: string }[];
 };
 
 /**
@@ -44,12 +44,12 @@ export const sidebarNavItems: SidebarNavItemData[] = [
     href: "/dashboard/integrations",
     icon: Puzzle,
   },
-  {
-    id: "analytics",
-    label: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart2,
-  },
+  // {
+  //   id: "analytics",
+  //   label: "Analytics",
+  //   href: "/dashboard/analytics",
+  //   icon: BarChart2,
+  // },
   {
     id: "team",
     label: "Team",
@@ -59,7 +59,13 @@ export const sidebarNavItems: SidebarNavItemData[] = [
   {
     id: "settings",
     label: "Settings",
-    href: "/dashboard/settings",
+    href: "/dashboard/settings/general",
     icon: Settings,
+    items: [
+      { title: "General", url: "/dashboard/settings/general" },
+      { title: "Chat Widget", url: "#" },
+      { title: "Notifications", url: "#" },
+      { title: "Webhooks", url: "#" },
+    ],
   },
 ];

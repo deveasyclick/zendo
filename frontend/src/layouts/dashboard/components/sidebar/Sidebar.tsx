@@ -6,6 +6,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { sidebarNavItems } from "./sidebarNavigationData";
@@ -16,11 +19,16 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { LogOut, Sun } from "lucide-react";
 import { SignOutButton } from "@clerk/react-router";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export default function DashboardSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
-  console.log("open", open);
+
   return (
     <Sidebar collapsible="icon" className="bg-sidebar">
       <SidebarHeader className="py-4 mb-6">
@@ -36,21 +44,43 @@ export default function DashboardSidebar() {
           {sidebarNavItems.map((item) => {
             const isActive = location.pathname === item.href;
             return (
-              <SidebarMenuItem key={item.label}>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={item.label}
-                  className={cn(
-                    isActive &&
-                      "bg-primary text-white shadow-md hover:bg-primary hover:text-white",
-                  )}
-                >
-                  <NavLink to={item.href}>
-                    <item.icon className="shrink-0" />
-                    {item.label}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <Collapsible
+                key={item.label}
+                asChild
+                defaultOpen={isActive}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem key={item.label}>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.label}
+                      className={cn(
+                        isActive &&
+                          "bg-primary text-white shadow-md hover:bg-primary hover:text-white",
+                      )}
+                    >
+                      <NavLink to={item.href}>
+                        <item.icon className="shrink-0" />
+                        {item.label}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.items?.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild>
+                            <a href={subItem.url}>
+                              <span>{subItem.title}</span>
+                            </a>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
             );
           })}
         </SidebarMenu>
