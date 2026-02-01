@@ -12,6 +12,8 @@ const Onboarding = lazy(() => import("@/pages/onboarding"));
 const Conversations = lazy(() => import("@/pages/conversations"));
 const Integrations = lazy(() => import("@/pages/integrations"));
 const Team = lazy(() => import("@/pages/team"));
+const Settings = lazy(() => import("@/pages/settings"));
+const GeneralSettings = lazy(() => import("@/pages/settings/sections/general"));
 
 export default function AppRoutes() {
   return (
@@ -27,6 +29,9 @@ export default function AppRoutes() {
           <Route path="conversations" element={<Conversations />} />
           <Route path="integrations" element={<Integrations />} />
           <Route path="team" element={<Team />} />
+          <Route path="settings" element={<Settings />}>
+            <Route path="general" element={<GeneralSettings />} />
+          </Route>
         </Route>
 
         {/* Onboarding routes */}
