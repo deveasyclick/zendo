@@ -14,7 +14,7 @@ const Integrations = lazy(() => import("@/pages/integrations"));
 const Team = lazy(() => import("@/pages/team"));
 const Settings = lazy(() => import("@/pages/settings"));
 const GeneralSettings = lazy(() => import("@/pages/settings/sections/general"));
-
+const ChatWidgetSettings = lazy(() => import("@/pages/settings/sections/chat"));
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -31,6 +31,7 @@ export default function AppRoutes() {
           <Route path="team" element={<Team />} />
           <Route path="settings" element={<Settings />}>
             <Route path="general" element={<GeneralSettings />} />
+            <Route path="chat" element={<ChatWidgetSettings />} />
           </Route>
         </Route>
 
