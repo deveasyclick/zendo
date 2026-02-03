@@ -64,7 +64,7 @@ export const sidebarNavItems: SidebarNavItemData[] = [
     items: [
       { title: "General", url: "/dashboard/settings/general" },
       { title: "Chat Widget", url: "/dashboard/settings/chat" },
-      { title: "Notifications", url: "#" },
+      { title: "Notifications", url: "/dashboard/settings/notifications" },
       { title: "Webhooks", url: "#" },
     ],
   },

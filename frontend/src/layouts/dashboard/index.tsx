@@ -8,7 +8,7 @@ export default function DashboardLayout() {
     <AppUserProvider>
       <SidebarProvider>
         {/* Full height flex container */}
-        <div className="flex h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 antialiased">
+        <div className="flex h-screen w-screen bg-gray-50 dark:bg-gray-900 antialiased">
           {/* Sidebar */}
           <Sidebar />
 

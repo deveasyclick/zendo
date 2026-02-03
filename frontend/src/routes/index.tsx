@@ -15,6 +15,10 @@ const Team = lazy(() => import("@/pages/team"));
 const Settings = lazy(() => import("@/pages/settings"));
 const GeneralSettings = lazy(() => import("@/pages/settings/sections/general"));
 const ChatWidgetSettings = lazy(() => import("@/pages/settings/sections/chat"));
+const NotificationsSettings = lazy(
+  () => import("@/pages/settings/sections/notifications"),
+);
+
 export default function AppRoutes() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -32,6 +36,7 @@ export default function AppRoutes() {
           <Route path="settings" element={<Settings />}>
             <Route path="general" element={<GeneralSettings />} />
             <Route path="chat" element={<ChatWidgetSettings />} />
+            <Route path="notifications" element={<NotificationsSettings />} />
           </Route>
         </Route>
 
