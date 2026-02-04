@@ -18,6 +18,9 @@ const ChatWidgetSettings = lazy(() => import("@/pages/settings/sections/chat"));
 const NotificationsSettings = lazy(
   () => import("@/pages/settings/sections/notifications"),
 );
+const WebhooksSettings = lazy(
+  () => import("@/pages/settings/sections/webhooks"),
+);
 
 export default function AppRoutes() {
   return (
@@ -37,6 +40,7 @@ export default function AppRoutes() {
             <Route path="general" element={<GeneralSettings />} />
             <Route path="chat" element={<ChatWidgetSettings />} />
             <Route path="notifications" element={<NotificationsSettings />} />
+            <Route path="webhooks" element={<WebhooksSettings />} />
           </Route>
         </Route>
 
