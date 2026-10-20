@@ -6,6 +6,8 @@ This platform allows businesses to embed a lightweight chat widget on their webs
 
 ---
 
+[MIT license](LICENSE)
+
 ## Features
 
 * Realtime messaging between website visitors and agents
